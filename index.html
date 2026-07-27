@@ -5,59 +5,211 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Material Rugby</title>
 <style>
-  :root { color-scheme: light dark; }
-  body { font-family: Arial, sans-serif; max-width: 480px; margin: 0 auto; padding: 16px; }
-  h1 { font-size: 20px; }
-  nav { display:flex; gap:8px; margin-bottom:16px; }
-  nav button { flex:1; padding:10px; border:1px solid #999; background:transparent; border-radius:6px; cursor:pointer; }
-  nav button.active { background:#38761d; color:white; border-color:#38761d; }
-  section { display:none; }
-  section.active { display:block; }
-  label { display:block; margin-top:12px; font-weight:bold; font-size:14px; }
-  select, input { width:100%; padding:8px; margin-top:4px; box-sizing:border-box; font-size:16px; }
-  button.submit { margin-top:18px; width:100%; padding:12px; background:#38761d; color:white; border:none; border-radius:6px; font-size:15px; }
-  #msg { margin-top:10px; font-size:13px; }
-  table { width:100%; border-collapse:collapse; margin-top:12px; font-size:13px; }
-  th, td { text-align:left; padding:6px; border-bottom:1px solid #ccc; }
-  tr.falta { background:#f4cccc; color:#000; }
-  p.ayuda { font-size:13px; color:#666; }
+  :root {
+    color-scheme: light dark;
+    --verde: #2e7d32;
+    --verde-oscuro: #1b5e20;
+    --verde-claro: #e8f5e9;
+    --rojo: #c62828;
+    --rojo-claro: #fdecea;
+    --bg: #f2f3f5;
+    --card: #ffffff;
+    --texto: #1c1c1e;
+    --texto-suave: #6b7280;
+    --borde: #e2e4e8;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #121316;
+      --card: #1c1e22;
+      --texto: #f0f0f2;
+      --texto-suave: #9aa0a6;
+      --borde: #2c2f34;
+      --verde-claro: #16351a;
+      --rojo-claro: #3a1a1a;
+    }
+  }
+  * { box-sizing: border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    background: var(--bg);
+    color: var(--texto);
+    margin: 0;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    padding: 24px 16px;
+  }
+  .app { width: 100%; max-width: 440px; }
+  header { display:flex; align-items:center; gap:10px; margin-bottom: 20px; }
+  header .logo {
+    font-size: 28px;
+    width: 44px; height: 44px;
+    display:flex; align-items:center; justify-content:center;
+    background: var(--verde-claro);
+    border-radius: 12px;
+  }
+  header h1 { font-size: 19px; margin: 0; letter-spacing: -0.2px; }
+  header p { margin: 0; font-size: 12px; color: var(--texto-suave); }
+
+  .card {
+    background: var(--card);
+    border-radius: 18px;
+    padding: 18px;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.04), 0 8px 24px rgba(0,0,0,0.06);
+    border: 1px solid var(--borde);
+  }
+
+  nav {
+    display: flex;
+    background: var(--bg);
+    border-radius: 12px;
+    padding: 4px;
+    margin-bottom: 18px;
+    gap: 4px;
+  }
+  nav button {
+    flex: 1;
+    border: none;
+    background: transparent;
+    color: var(--texto-suave);
+    font-weight: 600;
+    font-size: 13.5px;
+    padding: 10px 8px;
+    border-radius: 9px;
+    cursor: pointer;
+    transition: all .15s ease;
+  }
+  nav button.active {
+    background: var(--card);
+    color: var(--verde-oscuro);
+    box-shadow: 0 1px 3px rgba(0,0,0,0.12);
+  }
+
+  section { display: none; }
+  section.active { display: block; }
+
+  .ayuda { font-size: 12.5px; color: var(--texto-suave); margin: 0 0 16px; line-height: 1.4; }
+
+  label { display: block; font-size: 12.5px; font-weight: 600; color: var(--texto-suave); margin: 14px 0 6px; text-transform: uppercase; letter-spacing: .3px; }
+  label:first-of-type { margin-top: 0; }
+
+  select, input[type="number"], input[type="text"] {
+    width: 100%;
+    padding: 12px 14px;
+    font-size: 16px;
+    border: 1.5px solid var(--borde);
+    border-radius: 10px;
+    background: var(--bg);
+    color: var(--texto);
+    outline: none;
+    transition: border-color .15s ease;
+    -webkit-appearance: none;
+    appearance: none;
+  }
+  select:focus, input:focus { border-color: var(--verde); }
+
+  button.submit {
+    margin-top: 20px;
+    width: 100%;
+    padding: 14px;
+    background: var(--verde);
+    color: white;
+    border: none;
+    border-radius: 12px;
+    font-size: 15px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background .15s ease, transform .05s ease;
+  }
+  button.submit:hover { background: var(--verde-oscuro); }
+  button.submit:active { transform: scale(0.98); }
+  button.submit.secondary {
+    background: transparent;
+    color: var(--verde-oscuro);
+    border: 1.5px solid var(--borde);
+    margin-top: 0;
+    margin-bottom: 16px;
+  }
+  button.submit.secondary:hover { background: var(--verde-claro); }
+
+  #msg {
+    margin-top: 12px;
+    font-size: 13px;
+    font-weight: 600;
+    padding: 10px 12px;
+    border-radius: 10px;
+    display: none;
+  }
+  #msg.show { display: block; }
+  #msg.ok { background: var(--verde-claro); color: var(--verde-oscuro); }
+  #msg.error { background: var(--rojo-claro); color: var(--rojo); }
+  #msg.info { background: var(--bg); color: var(--texto-suave); }
+
+  .fila {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 0;
+    border-bottom: 1px solid var(--borde);
+  }
+  .fila:last-child { border-bottom: none; }
+  .fila .info .item { font-weight: 700; font-size: 14px; }
+  .fila .info .detalle { font-size: 12px; color: var(--texto-suave); margin-top: 2px; }
+  .badge {
+    font-size: 11.5px;
+    font-weight: 700;
+    padding: 5px 10px;
+    border-radius: 999px;
+    white-space: nowrap;
+  }
+  .badge.ok { background: var(--verde-claro); color: var(--verde-oscuro); }
+  .badge.falta { background: var(--rojo-claro); color: var(--rojo); }
+  .badge.pendiente { background: var(--bg); color: var(--texto-suave); }
+
+  .vacio { text-align: center; padding: 30px 10px; color: var(--texto-suave); font-size: 13px; }
 </style>
 </head>
 <body>
-  <h1>🏉 Material Rugby</h1>
+<div class="app">
+  <header>
+    <div class="logo">🏉</div>
+    <div>
+      <h1>Material Rugby</h1>
+      <p>Control de conos, balones y colchonetas</p>
+    </div>
+  </header>
 
-  <nav>
-    <button id="tabRegistrar" class="active" onclick="mostrarTab('registrar')">Registrar conteo</button>
-    <button id="tabResumen" onclick="mostrarTab('resumen')">Resumen</button>
-  </nav>
+  <div class="card">
+    <nav>
+      <button id="tabRegistrar" class="active" onclick="mostrarTab('registrar')">Registrar conteo</button>
+      <button id="tabResumen" onclick="mostrarTab('resumen')">Resumen</button>
+    </nav>
 
-  <section id="registrar" class="active">
-    <p class="ayuda">Cuenta el material al terminar el entrenamiento (martes/jueves) y regístralo aquí.</p>
+    <section id="registrar" class="active">
+      <p class="ayuda">Cuenta el material al terminar el entrenamiento (martes/jueves) y regístralo aquí.</p>
 
-    <label>Entrenador</label>
-    <input list="listaEntrenadores" id="entrenador" placeholder="Escribe tu nombre">
-    <datalist id="listaEntrenadores"></datalist>
+      <label>Entrenador</label>
+      <input list="listaEntrenadores" id="entrenador" type="text" placeholder="Escribe tu nombre">
+      <datalist id="listaEntrenadores"></datalist>
 
-    <label>Item</label>
-    <select id="item"></select>
+      <label>Item</label>
+      <select id="item"></select>
 
-    <label>Cantidad contada</label>
-    <input type="number" id="cantidad" min="0" value="0">
+      <label>Cantidad contada</label>
+      <input type="number" id="cantidad" min="0" value="0">
 
-    <button class="submit" onclick="enviar()">Registrar</button>
-    <div id="msg"></div>
-  </section>
+      <button class="submit" onclick="enviar()">Registrar</button>
+      <div id="msg"></div>
+    </section>
 
-  <section id="resumen">
-    <p class="ayuda">Lo resaltado en rojo es material que falta según el último conteo.</p>
-    <button class="submit" onclick="cargarResumen()">Actualizar</button>
-    <table id="tablaResumen">
-      <thead>
-        <tr><th>Item</th><th>Total</th><th>Último</th><th>Fecha</th><th>Estado</th></tr>
-      </thead>
-      <tbody></tbody>
-    </table>
-  </section>
+    <section id="resumen">
+      <p class="ayuda">Lo resaltado en rojo es material que falta según el último conteo.</p>
+      <button class="submit secondary" onclick="cargarResumen()">↻ Actualizar</button>
+      <div id="listaResumen"></div>
+    </section>
+  </div>
+</div>
 
 <script>
   const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxXP-lLoYvyRcpwLVHM3-n_DdQX0PBq1612cPumCIAyDSoAoLcGyvMwYx_B72BMB18yLQ/exec';
@@ -99,39 +251,63 @@
   }
 
   function cargarResumen() {
+    const cont = document.getElementById('listaResumen');
+    cont.innerHTML = '<p class="vacio">Cargando...</p>';
     fetch(SCRIPT_URL + '?action=resumen')
       .then(r => r.json())
       .then(rows => {
-        const tbody = document.querySelector('#tablaResumen tbody');
-        tbody.innerHTML = '';
-        rows.forEach(row => {
-          const tr = document.createElement('tr');
-          if (row.diferencia > 0) tr.classList.add('falta');
-          tr.innerHTML = `<td>${row.item}</td><td>${row.total}</td><td>${row.ultimo}</td><td>${row.fecha}</td><td>${row.estado}</td>`;
-          tbody.appendChild(tr);
-        });
+        if (!rows.length) {
+          cont.innerHTML = '<p class="vacio">Todavía no hay ítems configurados.</p>';
+          return;
+        }
+        cont.innerHTML = rows.map(row => {
+          let claseBadge = 'pendiente';
+          let texto = row.estado;
+          if (row.estado === 'OK') claseBadge = 'ok';
+          else if (String(row.estado).includes('Falta')) claseBadge = 'falta';
+
+          const detalle = row.ultimo === ''
+            ? 'Total esperado: ' + row.total
+            : 'Último conteo: ' + row.ultimo + ' de ' + row.total + (row.fecha ? ' · ' + row.fecha : '');
+
+          return `
+            <div class="fila">
+              <div class="info">
+                <div class="item">${row.item}</div>
+                <div class="detalle">${detalle}</div>
+              </div>
+              <span class="badge ${claseBadge}">${texto}</span>
+            </div>
+          `;
+        }).join('');
       });
+  }
+
+  function mostrarMensaje(texto, tipo) {
+    const msg = document.getElementById('msg');
+    msg.textContent = texto;
+    msg.className = 'show ' + tipo;
   }
 
   function enviar() {
     const entrenador = document.getElementById('entrenador').value;
     const item = document.getElementById('item').value;
     const cantidad = document.getElementById('cantidad').value;
-    const msg = document.getElementById('msg');
     if (!entrenador || !item || cantidad === '') {
-      msg.textContent = 'Completa todos los campos.';
+      mostrarMensaje('Completa todos los campos.', 'error');
       return;
     }
-    msg.textContent = 'Enviando...';
+    mostrarMensaje('Enviando...', 'info');
     fetch(SCRIPT_URL, {
       method: 'POST',
       body: JSON.stringify({ entrenador, item, cantidad })
     })
       .then(r => r.json())
       .then(res => {
-        msg.textContent = res.ok ? res.mensaje : ('Error: ' + res.error);
+        if (res.ok) mostrarMensaje('✓ ' + res.mensaje, 'ok');
+        else mostrarMensaje('Error: ' + res.error, 'error');
       })
-      .catch(err => { msg.textContent = 'Error de conexión: ' + err; });
+      .catch(err => mostrarMensaje('Error de conexión: ' + err, 'error'));
   }
 
   cargarItems();
